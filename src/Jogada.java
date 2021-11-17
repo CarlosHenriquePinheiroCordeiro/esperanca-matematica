@@ -7,19 +7,40 @@ public class Jogada {
 
 	private Lance lances[];
 	private List <Integer> resultados = new ArrayList<Integer>();
-	private Queue<Integer> fila       = new LinkedList<>();
+	private Queue<Lance> fila       = new LinkedList<>();
 	
 	public Jogada(int qtdLances) {
-		setLances(new Lance[montaEspacoArray(qtdLances)]);
+		setLances(new Lance[(int)montaEspacoArray(qtdLances)]);
+		montaJogadas(qtdLances);
 	}
 	
-	public int montaEspacoArray(int qtdLances) {
-		int x = 2;
+	/**
+	 * Retorna a quantidade de "vértices" que o grafo (lista de adjacência) terá de acordo com o número de lançamentos
+	 * @param int qtdLances
+	 * @return double x
+	 */
+	public double montaEspacoArray(int qtdLances) {
+		double x = 1;
 		for (int i = 1; i <= qtdLances; i++) {
-			x = x ^ i;
+			double p = Math.pow(2, i);
+			x = x + p;
 		}
 		
 		return x;
+	}
+	
+	public void montaJogadas(int qtdLances) {
+		int id = 1;
+		Lance novoLance = new Lance(id, 0, null);
+		fila.add(novoLance);
+		for (int x = 0; x < qtdLances; x++) {
+			montaCaraCoroa(fila.poll());
+		}
+		fila.clear();
+	}
+	
+	public void montaCaraCoroa(Lance lance) {
+		
 	}
 
 	public Lance[] getLances() {
@@ -38,11 +59,11 @@ public class Jogada {
 		this.resultados = resultados;
 	}
 
-	public Queue<Integer> getFila() {
+	public Queue<Lance> getFila() {
 		return fila;
 	}
 
-	public void setFila(Queue<Integer> fila) {
+	public void setFila(Queue<Lance> fila) {
 		this.fila = fila;
 	}
 	
