@@ -15,6 +15,10 @@ public class Jogada {
 		montaJogadas(qtdLances);
 	}
 	
+	public void mostraJogadas() {
+		
+	}
+	
 	/**
 	 * Retorna a quantidade de "vértices" que o grafo (lista de adjacência) terá de acordo com o número de lançamentos
 	 * @param int qtdLances
@@ -37,33 +41,41 @@ public class Jogada {
 	public void montaJogadas(int qtdLances) {
 		int id = 1;
 		Lance novoLance = new Lance(id, 1, null);
-		fila.add(novoLance);
+		adicionaLance(novoLance);
+		getFila().add(novoLance);
 		for (int x = 0; x <= qtdLances; x++) {
-			int limite = fila.size();
+			int limite = getFila().size();
 			for (int y = 0; y < limite; y++) {
-				System.out.println(fila.peek().getId());
-				montaCaraCoroa(fila.poll());
+				System.out.println(getFila().peek().getId());
+				montaCaraCoroa(getFila().poll());
 			}
 		}
-		fila.clear();
+		getFila().clear();
+		System.out.println("Tamanho da árvore: "+getLances().length);
 	}
 	
 	/**
 	 * Para cada lance recebido como parâmetro, define um lançamento de cara e coroa para ele
 	 * @param lance 
 	 */
-	public boolean montaCaraCoroa(Lance lance) {
-		if (lance != null) {
-			Lance nCara  = new Lance(lance.getId() * 2		, 1, "Cara");
-			Lance nCoroa = new Lance((lance.getId() * 2) + 1, 2, "Coroa");
-			lance.setCara(nCara);
-			lance.setCoroa(nCoroa);
-			fila.add(nCara);
-			fila.add(nCoroa);
-			
-			return true;
+	public void montaCaraCoroa(Lance lance) {
+		Lance nCara  = new Lance(lance.getId() * 2		, 1, "Cara");
+		Lance nCoroa = new Lance((lance.getId() * 2) + 1, 2, "Coroa");
+		
+		lance.setCara(nCara);
+		lance.setCoroa(nCoroa);
+		getFila().add(nCara);
+		getFila().add(nCoroa);
+		getAdicionados().add(nCara);
+		getAdicionados().add(nCoroa);
+		adicionaLance(nCara);
+		adicionaLance(nCoroa);
+	}
+	
+	public void adicionaLance(Lance lance) {
+		if ((lance.getId()) - 1 < getLances().length) {
+			getLances()[lance.getId() - 1] = lance;
 		}
-		return false;
 	}
 
 	public Lance[] getLances() {
@@ -80,6 +92,14 @@ public class Jogada {
 
 	public void setResultados(List<Integer> resultados) {
 		this.resultados = resultados;
+	}
+
+	public Queue<Lance> getAdicionados() {
+		return adicionados;
+	}
+
+	public void setAdicionados(Queue<Lance> adicionados) {
+		this.adicionados = adicionados;
 	}
 
 	public Queue<Lance> getFila() {
