@@ -7,8 +7,8 @@ public class Jogada {
 
 	private Lance lances[];
 	private List <Integer> resultados = new ArrayList<Integer>();
-	private Queue<Lance> adicionados  = new LinkedList<>();
-	private Queue<Lance> fila         = new LinkedList<>();
+	private List <Lance>   lancados   = new ArrayList<Lance>();
+	private Queue<Lance>   fila       = new LinkedList<>();
 	
 	public Jogada(int qtdLances) {
 		setLances(new Lance[(int)montaEspacoArray(qtdLances)]);
@@ -46,12 +46,10 @@ public class Jogada {
 		for (int x = 0; x <= qtdLances; x++) {
 			int limite = getFila().size();
 			for (int y = 0; y < limite; y++) {
-				System.out.println(getFila().peek().getId());
 				montaCaraCoroa(getFila().poll());
 			}
 		}
 		getFila().clear();
-		System.out.println("Tamanho da árvore: "+getLances().length);
 	}
 	
 	/**
@@ -66,8 +64,6 @@ public class Jogada {
 		lance.setCoroa(nCoroa);
 		getFila().add(nCara);
 		getFila().add(nCoroa);
-		getAdicionados().add(nCara);
-		getAdicionados().add(nCoroa);
 		adicionaLance(nCara);
 		adicionaLance(nCoroa);
 	}
@@ -94,12 +90,12 @@ public class Jogada {
 		this.resultados = resultados;
 	}
 
-	public Queue<Lance> getAdicionados() {
-		return adicionados;
+	public List<Lance> getLancados() {
+		return lancados;
 	}
 
-	public void setAdicionados(Queue<Lance> adicionados) {
-		this.adicionados = adicionados;
+	public void setLancados(List<Lance> lancados) {
+		this.lancados = lancados;
 	}
 
 	public Queue<Lance> getFila() {
