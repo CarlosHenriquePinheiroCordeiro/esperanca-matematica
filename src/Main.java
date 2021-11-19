@@ -8,7 +8,6 @@ public class Main {
 		int qtdLancamentos 		  = digite.nextInt();
 		int resultadosEsperados[] = new int[qtdLancamentos];
 		
-		Jogada jogo = new Jogada(qtdLancamentos);
 		System.out.println("Digite a sequência de resultados desejada.");
 		System.out.println("Cara = 1 | Coroa = 2");
 		
@@ -18,7 +17,9 @@ public class Main {
 		}
 		
 		System.out.println("\nEstas são as possíveis sequências de resultados em "+qtdLancamentos+" lançamentos:");
-		jogo.esperanca();
+		Jogada jogo = new Jogada(qtdLancamentos, resultadosEsperados);
+		
+		System.out.println(jogo.esperanca());
 		
 		digite.close();
 	}

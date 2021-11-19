@@ -5,67 +5,18 @@ import java.util.Queue;
 
 public class Jogada {
 
+	private int[] esperados;
 	private int qtdLances;
 	private Lance lances[];
-	private List <Integer> resultados = new ArrayList<Integer>();
-	private List <Lance>   visitados  = new ArrayList<Lance>();
-	private Queue<Lance>   fila       = new LinkedList<>();
+	private List <List>  resultados = new ArrayList<List>();
+	private List <Lance> visitados  = new ArrayList<Lance>();
+	private Queue<Lance> fila       = new LinkedList<>();
 	
-	public Jogada(int qtdLances) {
+	public Jogada(int qtdLances, int[] esperados) {
+		setEsperados(esperados);
 		setQtdLances(qtdLances);
 		setLances(new Lance[(int)montaEspacoArray(getQtdLances())]);
 		montaJogadas(qtdLances);
-	}
-	
-	public void esperanca() {
-		buscaProfundidade(getLances()[0]);
-	}
-	
-	public void buscaProfundidade(Lance lance) {
-		if (lance != null) {
-			if (!visitados.contains(lance) && !isFim(lance)) {
-				visitados.add(lance);
-				buscaProfundidade(lance.getCara());
-				mostraJogadas();
-				buscaProfundidade(lance.getCoroa());
-				getVisitados().remove(getVisitados().size() - 1);
-			}
-		}
-	}
-	
-	public boolean isFim(Lance lance) {
-		return lance.getCara() == null;
-	}
-	
-	public void mostraJogadas() {
-		if (getVisitados().size() == getQtdLances() + 1) {
-			System.out.print("->");
-			for (Lance lance : getVisitados()) {
-				if (lance.getFace() != null) {
-					System.out.print(lance.getFace()+" ");
-				}
-			}
-			System.out.print("\n");
-		}
-	}
-	
-	public void montaResultados() {
-		
-	}
-	
-	/**
-	 * Retorna a quantidade de "vértices" que o grafo (lista de adjacência) terá de acordo com o número de lançamentos
-	 * @param int qtdLances
-	 * @return double x
-	 */
-	public double montaEspacoArray(int qtdLances) {
-		double x = 1;
- 		for (int i = 1; i <= qtdLances; i++) {
-			double p = Math.pow(2, i);
-			x = x + p;
-		}
-		
-		return x;
 	}
 	
 	/**
@@ -87,6 +38,21 @@ public class Jogada {
 	}
 	
 	/**
+	 * Retorna a quantidade de "vértices" que o grafo (lista de adjacência) terá de acordo com o número de lançamentos
+	 * @param int qtdLances
+	 * @return double x
+	 */
+	public double montaEspacoArray(int qtdLances) {
+		double x = 1;
+ 		for (int i = 1; i <= qtdLances; i++) {
+			double p = Math.pow(2, i);
+			x = x + p;
+		}
+		
+		return x;
+	}
+	
+	/**
 	 * Para cada lance recebido como parâmetro, define um lançamento de cara e coroa para ele
 	 * @param lance 
 	 */
@@ -102,10 +68,100 @@ public class Jogada {
 		adicionaLance(nCoroa);
 	}
 	
+	public String esperanca() {
+		buscaProfundidade(getLances()[0]);
+		
+		String[] face = {"Cara", "Coroa"};
+		String retorno = "A esperança matemática para ";
+		for (int f : getEsperados()) {
+			retorno += (face[f - 1]+" ");
+		}
+		return retorno+"é de: "+vezesResultadoEsperado()+"/"+getResultados().size();
+		
+	}
+	
+	public void buscaProfundidade(Lance lance) {
+		if (lance != null) {
+			if (!visitados.contains(lance) && !isFim(lance)) {
+				visitados.add(lance);
+				buscaProfundidade(lance.getCara());
+				mostraJogadas();
+				buscaProfundidade(lance.getCoroa());
+				getVisitados().remove(getVisitados().size() - 1);
+			}
+		}
+	}
+	
+	public void mostraJogadas() {
+		if (getVisitados().size() == getQtdLances() + 1) {
+			System.out.print("->");
+			List<Integer> sequencia = new ArrayList<Integer>();
+			for (Lance lance : getVisitados()) {
+				if (lance.getFace() != null) {
+					sequencia.add(lance.getValor());
+					System.out.print(lance.getFace()+" ");
+				}
+			}
+			resultados.add(sequencia);
+			System.out.print("\n");
+		}
+	}
+	
+	public int vezesResultadoEsperado() {
+		int vezes = 0;
+		for (List sequencia : getResultados()) {
+			if (resultadoIgual(sequencia)) {
+				vezes++;
+			}
+		}
+		return vezes;
+	}
+	
+	public boolean resultadoIgual(List sequencia) {
+		int caraEsperado   = contaCaraCoroaEsperados(getEsperados(), 1);
+		int coroaEsperado  = contaCaraCoroaEsperados(getEsperados(), 2);
+		int caraResultado  = contaCaraCoroaResultados(sequencia	  , 1);
+		int coroaResultado = contaCaraCoroaResultados(sequencia	  , 2);
+		
+		return caraEsperado == caraResultado && coroaEsperado == coroaResultado;
+	}
+	
+	public int contaCaraCoroaEsperados(int[] esperados, int caraCoroa) {
+		int i = 0;
+		for (int x = 0; x < esperados.length; x++) {
+			if (esperados[x] == caraCoroa) {
+				i++;
+			}
+		}
+		return i;
+	}
+	
+	public int contaCaraCoroaResultados(List sequencia, int caraCoroa) {
+		int i = 0;
+		for (int x = 0; x < sequencia.size(); x++) {
+			if ((int)sequencia.get(x) == caraCoroa) {
+				i++;
+			}
+		}
+		return i;
+	}
+	
+	public boolean isFim(Lance lance) {
+		return lance.getCara() == null;
+	}
+	
 	public void adicionaLance(Lance lance) {
 		if ((lance.getId()) - 1 < getLances().length) {
 			getLances()[lance.getId() - 1] = lance;
 		}
+	}
+
+	public int[] getEsperados() {
+		return esperados;
+	}
+
+	public void setEsperados(int[] esperados) {
+		this.esperados = esperados;
 	}
 
 	public int getQtdLances() {
@@ -124,11 +180,11 @@ public class Jogada {
 		this.lances = lances;
 	}
 
-	public List<Integer> getResultados() {
+	public List<List> getResultados() {
 		return resultados;
 	}
 
-	public void setResultados(List<Integer> resultados) {
+	public void setResultados(List<List> resultados) {
 		this.resultados = resultados;
 	}
 
