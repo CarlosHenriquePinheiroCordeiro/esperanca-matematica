@@ -17,6 +17,9 @@ public class Main {
 			resultadosEsperados[x - 1] = digite.nextInt();
 		}
 		
+		System.out.println("\nEstas são as possíveis sequências de resultados em "+qtdLancamentos+" lançamentos:");
+		jogo.esperanca();
+		
 		digite.close();
 	}
 

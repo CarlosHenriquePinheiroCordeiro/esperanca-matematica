@@ -5,17 +5,51 @@ import java.util.Queue;
 
 public class Jogada {
 
+	private int qtdLances;
 	private Lance lances[];
 	private List <Integer> resultados = new ArrayList<Integer>();
-	private List <Lance>   lancados   = new ArrayList<Lance>();
+	private List <Lance>   visitados  = new ArrayList<Lance>();
 	private Queue<Lance>   fila       = new LinkedList<>();
 	
 	public Jogada(int qtdLances) {
-		setLances(new Lance[(int)montaEspacoArray(qtdLances)]);
+		setQtdLances(qtdLances);
+		setLances(new Lance[(int)montaEspacoArray(getQtdLances())]);
 		montaJogadas(qtdLances);
 	}
 	
+	public void esperanca() {
+		buscaProfundidade(getLances()[0]);
+	}
+	
+	public void buscaProfundidade(Lance lance) {
+		if (lance != null) {
+			if (!visitados.contains(lance) && !isFim(lance)) {
+				visitados.add(lance);
+				buscaProfundidade(lance.getCara());
+				mostraJogadas();
+				buscaProfundidade(lance.getCoroa());
+				getVisitados().remove(getVisitados().size() - 1);
+			}
+		}
+	}
+	
+	public boolean isFim(Lance lance) {
+		return lance.getCara() == null;
+	}
+	
 	public void mostraJogadas() {
+		if (getVisitados().size() == getQtdLances() + 1) {
+			System.out.print("->");
+			for (Lance lance : getVisitados()) {
+				if (lance.getFace() != null) {
+					System.out.print(lance.getFace()+" ");
+				}
+			}
+			System.out.print("\n");
+		}
+	}
+	
+	public void montaResultados() {
 		
 	}
 	
@@ -74,6 +108,14 @@ public class Jogada {
 		}
 	}
 
+	public int getQtdLances() {
+		return qtdLances;
+	}
+
+	public void setQtdLances(int qtdLances) {
+		this.qtdLances = qtdLances;
+	}
+
 	public Lance[] getLances() {
 		return lances;
 	}
@@ -90,12 +132,12 @@ public class Jogada {
 		this.resultados = resultados;
 	}
 
-	public List<Lance> getLancados() {
-		return lancados;
+	public List<Lance> getVisitados() {
+		return visitados;
 	}
 
-	public void setLancados(List<Lance> lancados) {
-		this.lancados = lancados;
+	public void setVisitados(List<Lance> visitados) {
+		this.visitados = visitados;
 	}
 
 	public Queue<Lance> getFila() {
