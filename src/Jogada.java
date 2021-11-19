@@ -3,6 +3,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * Classe responsável pela montagem dos resultados do jogo de cara ou coroa, e também pelo cálculo da esperança matemática
+ * para o resultado desejado pelo usuário
+ * @author Carlos Henrique Pinheiro Cordeiro
+ *
+ */
 public class Jogada {
 
 	private int[] esperados;
@@ -68,6 +74,10 @@ public class Jogada {
 		adicionaLance(nCoroa);
 	}
 	
+	/**
+	 * Realiza e retorna o resultado do cálculo da esperança matemática para o resultado desejado
+	 * @return String
+	 */
 	public String esperanca() {
 		buscaProfundidade(getLances()[0]);
 		
@@ -80,6 +90,11 @@ public class Jogada {
 		
 	}
 	
+	/**
+	 * Algoritmo da busca em profundidade (Teoria dos Grafos) para a listagem dos resultados vindos
+	 * dos lançamentos da moeda (montagem da "árvore de resultados")
+	 * @param lance
+	 */
 	public void buscaProfundidade(Lance lance) {
 		if (lance != null) {
 			if (!visitados.contains(lance) && !isFim(lance)) {
@@ -92,6 +107,10 @@ public class Jogada {
 		}
 	}
 	
+	/**
+	 * Mostra todas as sequências de resultados da jogada ao todo, conforme número de lançamentos
+	 * determinado
+	 */
 	public void mostraJogadas() {
 		if (getVisitados().size() == getQtdLances() + 1) {
 			System.out.print("->");
@@ -107,6 +126,10 @@ public class Jogada {
 		}
 	}
 	
+	/**
+	 * Retorna quantas vezes o resultado esperado pelo usuário aparece no jogo
+	 * @return int
+	 */
 	public int vezesResultadoEsperado() {
 		int vezes = 0;
 		for (List sequencia : getResultados()) {
@@ -117,6 +140,11 @@ public class Jogada {
 		return vezes;
 	}
 	
+	/**
+	 * Retorna se o resultado esperado pelo usuário condiz com da jogada em questão passada como parâmetro
+	 * @param sequencia
+	 * @return boolean
+	 */
 	public boolean resultadoIgual(List sequencia) {
 		int caraEsperado   = contaCaraCoroaEsperados(getEsperados(), 1);
 		int coroaEsperado  = contaCaraCoroaEsperados(getEsperados(), 2);
@@ -126,6 +154,12 @@ public class Jogada {
 		return caraEsperado == caraResultado && coroaEsperado == coroaResultado;
 	}
 	
+	/**
+	 * Conta a quantidade de caras ou coroas da sequência de resultados esperada pelo usuário
+	 * @param esperados
+	 * @param caraCoroa
+	 * @return int
+	 */
 	public int contaCaraCoroaEsperados(int[] esperados, int caraCoroa) {
 		int i = 0;
 		for (int x = 0; x < esperados.length; x++) {
@@ -136,6 +170,12 @@ public class Jogada {
 		return i;
 	}
 	
+	/**
+	 * Conta a quantidade de caras ou coroas da sequência de resultados da jogada em questão passada como parâmetro
+	 * @param sequencia
+	 * @param caraCoroa
+	 * @return int
+	 */
 	public int contaCaraCoroaResultados(List sequencia, int caraCoroa) {
 		int i = 0;
 		for (int x = 0; x < sequencia.size(); x++) {
@@ -146,10 +186,19 @@ public class Jogada {
 		return i;
 	}
 	
+	/**
+	 * Retorna se deve adicionar o lance em questão na "árvore" de resultados
+	 * @param lance
+	 * @return boolean
+	 */
 	public boolean isFim(Lance lance) {
 		return lance.getCara() == null;
 	}
 	
+	/**
+	 * Adiciona um lance ao array de lances
+	 * @param lance
+	 */
 	public void adicionaLance(Lance lance) {
 		if ((lance.getId()) - 1 < getLances().length) {
 			getLances()[lance.getId() - 1] = lance;

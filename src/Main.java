@@ -1,5 +1,10 @@
 import java.util.Scanner;
 
+/**
+ * Trabalho de cálculo da esperança matemática em um jogo de Cara ou Coroa
+ * @author Carlos Henrique Pinheiro Cordeiro
+ *
+ */
 public class Main {
 
 	public static void main(String[] args) {

@@ -1,4 +1,8 @@
-
+/**
+ * Classe que representa cada lance da moeda no jogo
+ * @author Carlos Henrique Pinheiro Cordeiro
+ *
+ */
 public class Lance {
 
 	private int id;
